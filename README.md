@@ -13,6 +13,8 @@ composer require malvik-lab/ip-api-client
 ```php
 <?php
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use GuzzleHttp\Client;
 use MalvikLab\IpApiClient\IpApiClient;
 
