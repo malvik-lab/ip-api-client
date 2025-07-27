@@ -4,16 +4,15 @@ namespace MalvikLab\IpApiClient;
 
 use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\MapperBuilder;
+use Respect\Validation\Validator as v;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use MalvikLab\IpApiClient\DTO\DataDTO;
-use Rakit\Validation\Validator;
-use MalvikLab\IpApiClient\Exceptions\ValidationException;
 
 class IpApiClient
 {
     public const NAME = 'IP API CLIENT';
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.0.1';
 
     public function __construct(private null | HttpClient $httpClient = null)
     {
@@ -24,36 +23,20 @@ class IpApiClient
     }
 
     /**
-     * @param null $ip
+     * @param $ip
      * @return DataDTO
      * @throws GuzzleException
      * @throws MappingError
-     * @throws ValidationException
      */
     public function get($ip = null): DataDTO
     {
-        $validator = new Validator();
+        v::ip()->assert($ip);
 
-        $inputs = [
-            'ip' => $ip,
-        ];
+        $url = sprintf('http://ip-api.com/json/%s?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query',
+            $ip
+        );
 
-        $rules = [
-            'ip' => [
-                'required',
-                'ip'
-            ],
-        ];
-
-        $validation = $validator->make($inputs, $rules);
-        $validation->validate();
-
-        if ( $validation->fails() )
-        {
-            throw new ValidationException($validation->errors());
-        }
-
-        $response = $this->httpClient->get('http://ip-api.com/json/' . $validation->getValidData()['ip']);
+        $response = $this->httpClient->get($url);
 
         $data = [
             'limit' => [

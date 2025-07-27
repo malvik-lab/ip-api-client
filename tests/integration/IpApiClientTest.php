@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration;
+namespace Tests\integration;
 
 use CuyZ\Valinor\Mapper\MappingError;
 use GuzzleHttp\Exception\GuzzleException;
-use MalvikLab\IpApiClient\DTO\DataDTO;
-use MalvikLab\IpApiClient\Exceptions\ValidationException;
 use MalvikLab\IpApiClient\IpApiClient;
+use Respect\Validation\Exceptions\ValidationException;
 use PHPUnit\Framework\TestCase;
 
 final class IpApiClientTest extends TestCase
@@ -50,7 +49,8 @@ final class IpApiClientTest extends TestCase
      */
     public function testValidIp(): void
     {
-        $dataDTO = $this->client->get('8.8.8.8');
-        $this->assertInstanceOf(DataDTO::class, $dataDTO);
+        $ip = '8.8.8.8';
+        $dataDTO = $this->client->get($ip);
+        $this->assertSame($ip, $dataDTO->ipInfo->query);
     }
 }

@@ -23,7 +23,7 @@
   "require": {
     "php": "^8.2",
     "guzzlehttp/guzzle": "^7.0",
-    "rakit/validation": "^1.4",
+    "respect/validation": "^2.4",
     "cuyz/valinor": "^1.7"
   },
   "require-dev": {
